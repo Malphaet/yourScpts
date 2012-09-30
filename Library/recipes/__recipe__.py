@@ -25,6 +25,7 @@
 
 # Include
 
+import os
 from .. import *
 
 # Classes
@@ -38,26 +39,31 @@ class recipe():
 	version="0.1a"
 	
 	def __init__(self,deploy):
-		self.name=self.__name__
-		self.deploy=deploypath
-		self.deployname=os.path.join(self.deploypath,self.name)
-		self.extractname=self.deployname+'_'+version
-		self.tmppath=os.tmpname()
+		self.deploypath,self.name=os.path.split(deploy)
+		
+		self.deployname=deploy
+		self.extractname=self.deployname+'_'+self.version
+		self.tmppath=os.tmpnam()
 		
 	def fetch(self):
 		download.fetch(self.download,self.tmppath)
 	
-	def check(self):
-		if not checksum.integrity(self.tmpfile,self.checksum,self.checktype):
+	def check(self,do_not_stop_on_error=True):
+		"The do_not_stop_on_error will print the checksum and continue"
+		if not checksum.integrity(self.tmppath,self.checksum,self.checktype,do_not_stop_on_error):
 			raise ValueError("Hash of fetched file and given one don't match.")
+			
 		
 	def extract(self):
-		os.mkdir(self.extractname)
-		if not archive.extract(self.tmpfile,self.extractname):
+		try:
+			os.mkdir(self.extractname)
+		except:
+			raise IOError("The program already exists (you should have tested that moron).")
+		if not archive.extract(self.tmppath,self.extractname):
 			os.rmdir(self.extractname)
 		
 	def clean(self):
-		os.remove(self.tmpfile)
+		os.remove(self.tmppath)
 		
 	def link(self):
 		syslink.link(self.extractname,self.deployname) # Totally unsure about that
@@ -72,17 +78,5 @@ class recipe():
 		self.check() # You should ALWAYS check, yet you're the boss
 		self.extract()
 		self.test() # DEBUG
-#		self.clean()
-#		self.link()
-	
-class exempleRecipe(recipe):
-	checktype="sha1"
-	checksum="0123456789abcde0123456789abcde"
-	homepage=""
-	download=""
-	
-	def install(self):
-		self.fetch()
-		self.extract()
 		self.clean()
-		self.link()
+#		self.link()

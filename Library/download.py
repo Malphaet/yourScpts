@@ -24,21 +24,31 @@
 ########################################################
 
 # Import
-import pycurl
+import pycurl,sys
 
+# Functions
 def fetch(url,tmpfile):
 	c = pycurl.Curl()
 	c.setopt(pycurl.URL, url)
 	c.setopt(pycurl.HTTPHEADER, ["Accept:"])
 
-	b = open(tmpname,'wb')
+	b = open(tmpfile,'wb')
 	c.setopt(pycurl.WRITEFUNCTION, b.write)
 	c.setopt(pycurl.FOLLOWLOCATION, 1)
 	c.setopt(pycurl.MAXREDIRS, 5)
+	c.setopt(pycurl.NOPROGRESS, 0)
+	c.setopt(pycurl.PROGRESSFUNCTION, progress)
+	print ""
 	c.perform()
 	b.close()
-	if c.getinfo(pycurl.HTTP_CODE)>299:
+	CODE,PAGE=c.getinfo(pycurl.HTTP_CODE),c.getinfo(pycurl.EFFECTIVE_URL)
+	print ""
+	if CODE>299:
 		os.remove(tmpfile)
 		raise IOError("URL %s unreachable"%self.download)
-	return (c.getinfo(pycurl.HTTP_CODE), c.getinfo(pycurl.EFFECTIVE_URL))
+	c.close()
+	return (CODE,PAGE)
 
+def progress(download_t, download_d, upload_t, upload_d): 
+     sys.stdout.write("\rDownloading %i/%i"%(download_d,download_t))
+     sys.stdout.flush()

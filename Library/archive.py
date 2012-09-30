@@ -30,14 +30,15 @@ import tarfile,zipfile,mimetypes
 # Functions
 
 def extract(path,dest):
-	if "text/" == mimetypes.read_mime_types(path)[:5]:
+	mime=mimetypes.guess_type(path,False)[0]
+	if mime!=None and "text/" in mime :
 		f,d=open(path),open(dest)
 		d.write(f.read())
 		d.close(),f.close()
 		return True
 	if tarfile.is_tarfile(path): tmpf=tarfile.open(path,'r')
 	else:
-		if zipfile.is_zipfile(path): tmpf=zipfile.open(path)
+		if zipfile.is_zipfile(path): tmpf=zipfile.ZipFile(path)
 		else: 
 			print "The given file is impossible to extract."
 			return False

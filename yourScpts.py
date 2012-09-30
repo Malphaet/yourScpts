@@ -24,13 +24,14 @@
 ########################################################
 
 # Import
-import os,sys
+import os,sys,warnings
 import importlib,argparse
 
 from Library import *
-from Library import recipes
+from Library import recipes,extend
+from Library.extend import *
 
-#download.fetch("http://pycurl.sourceforge.net/doc/curlobject.html","test.html")
+warnings.simplefilter("ignore")
 
 # ys install goolib [path][version]
 # ys update goolib [samepath !]
@@ -40,16 +41,19 @@ from Library import recipes
 # ys version goolib
 
 parser=argparse.ArgumentParser(description="Install a script according to a given recipe.")
-parser.add_argument('mode', metavar='Mode', nargs='1', type=str, choices=['install','update','locate','version','remove'], help='action to perform')
-parser.add_argument('recipe', metavar='Program Name', nargs='1', type=str, help='the program to fetch')
-parser.add_argument('recipe', metavar='Program Name', nargs='?', type=str, help='custom path to install the program')
+parser.add_argument('mode', metavar='mode', type=str,choices=['install','update','locate','version','remove'], help='action to perform') # 
+parser.add_argument('recipe', metavar='recipe', type=str, help='the program to fetch')
+parser.add_argument('path', nargs='?', help='custom path to install the program',default=ENV.MODULE_PATH)
 
 parser.add_argument('-v','--verbose', dest='debug', action='store_true', default=False, help='be verbose')
 
 
 args = parser.parse_args()
 try:
-	mod= importlib.import_module("Library.recipes."+args.recipe)
-except:
+	mod=importlib.import_module("Library.recipes."+args.recipe)
+	mod.install(os.path.join(args.path,args.recipe))
+except ImportError:
 	print "The program doesn't have an available receipe for %s."%args.recipe
 	print "Maybe you should check if the name is correct, or contribute by adding it to the database."
+except:
+	print sys.exc_info()[:2]

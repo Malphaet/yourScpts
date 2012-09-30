@@ -23,7 +23,7 @@
 # LICENCE                                              #
 ########################################################
 
-__all__ = ["checksum","download","extract","syslink","install"]
+__all__ = ["checksum","download","archive","syslink","install"]
 
 if __name__ == '__main__':
 	sys.exit()
