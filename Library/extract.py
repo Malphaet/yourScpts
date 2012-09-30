@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 
 ###########################################
-# globals.py
+# extract.py
 # Nom: yourScpts
 # Copyright 2012: Maximilien Rigaut
 ###########################################
@@ -22,3 +22,25 @@
 ########################################################
 # LICENCE                                              #
 ########################################################
+
+# Import
+
+import tarfile,zipfile,mimetypes
+
+# Functions
+
+def extract(path,dest):
+	if "text/" == mimetypes.read_mime_types(path)[:5]:
+		f,d=open(path),open(dest)
+		d.write(f.read())
+		d.close(),f.close()
+		return True
+	if tarfile.is_tarfile(path): tmpf=tarfile.open(path,'r')
+	else:
+		if zipfile.is_zipfile(path): tmpf=zipfile.open(path)
+		else: 
+			print "The given file is impossible to extract."
+			return False
+	tmpf.extractall(dest)
+	tmpf.close()
+	return True

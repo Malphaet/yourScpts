@@ -27,13 +27,15 @@
 import hashlib
 
 # Functions
-def integrity(path_to_check,checksum_file,checksum_type=hashlib.sha256):
-	return checksum()==checksum_type
+def integrity(file_to_check,checksum_value,checksum_type='sha1'):
+	if checksum_type not in hashlib.algorithms: raise NotImplementedError("This is not the hash you are looking for.")
+	checksum_type=hashlib.__dict__[checksum_type]
+	return checksum(file_to_check,checksum_type)==checksum_value
 	
-def checksum(path_to_check,checksum_type=hashlib.sha256):
-#	if checksum_type not in hashlib.algorithms:
-#		raise ValueError
-	return checksum_type(open(path_to_check,'r').read()).hexdigest()
+def checksum(file_to_check,checksum_type=hashlib.sha256):
+	"Takes a file descriptor, and applies a checksum to it."
+#	return checksum_type(open(path_to_check,'r').read()).hexdigest()
+	return checksum_type(file_to_check.read()).hexdigest()
 # Main
 if __name__ == '__main__':
 	sys.exit()

@@ -25,10 +25,12 @@
 
 # Import
 import os,sys
+import importlib,argparse
 
 from Library import *
- 
-download.fetch("http://pycurl.sourceforge.net/doc/curlobject.html","test.html")
+from Library import recipes
+
+#download.fetch("http://pycurl.sourceforge.net/doc/curlobject.html","test.html")
 
 # ys install goolib [path][version]
 # ys update goolib [samepath !]
@@ -36,3 +38,18 @@ download.fetch("http://pycurl.sourceforge.net/doc/curlobject.html","test.html")
 # ys locate goolib
 # ys -v
 # ys version goolib
+
+parser=argparse.ArgumentParser(description="Install a script according to a given recipe.")
+parser.add_argument('mode', metavar='Mode', nargs='1', type=str, choices=['install','update','locate','version','remove'], help='action to perform')
+parser.add_argument('recipe', metavar='Program Name', nargs='1', type=str, help='the program to fetch')
+parser.add_argument('recipe', metavar='Program Name', nargs='?', type=str, help='custom path to install the program')
+
+parser.add_argument('-v','--verbose', dest='debug', action='store_true', default=False, help='be verbose')
+
+
+args = parser.parse_args()
+try:
+	mod= importlib.import_module("Library.recipes."+args.recipe)
+except:
+	print "The program doesn't have an available receipe for %s."%args.recipe
+	print "Maybe you should check if the name is correct, or contribute by adding it to the database."

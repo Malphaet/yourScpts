@@ -26,7 +26,7 @@
 # Import
 import pycurl
 
-def fetch(url,tmpname):
+def fetch(url,tmpfile):
 	c = pycurl.Curl()
 	c.setopt(pycurl.URL, url)
 	c.setopt(pycurl.HTTPHEADER, ["Accept:"])
@@ -36,6 +36,9 @@ def fetch(url,tmpname):
 	c.setopt(pycurl.FOLLOWLOCATION, 1)
 	c.setopt(pycurl.MAXREDIRS, 5)
 	c.perform()
+	b.close()
+	if c.getinfo(pycurl.HTTP_CODE)>299:
+		os.remove(tmpfile)
+		raise IOError("URL %s unreachable"%self.download)
 	return (c.getinfo(pycurl.HTTP_CODE), c.getinfo(pycurl.EFFECTIVE_URL))
-
 
