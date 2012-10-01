@@ -15,9 +15,9 @@ If you would rather use the last (unstable version)
 Usage
 ----
 
-    python ys.py install <package>
-    python ys.py create <package>
-    python ys.py edit <package>
+    python yourScpts.py install <package>
+    python yourScpts.py create <package>
+    python yourScpts.py edit <package>
 
 HOW-TO
 ----
@@ -26,10 +26,10 @@ HOW-TO
 
 The mandatory basecode is:
 
-	from \_\_recipe__ import recipe
+	from __recipe__ import recipe
 		
 	class yourRecipe(recipe):
-		checktype="sha1"
+		checktype="" # Check hashlib for available algorithms
 		checksum=""
 		homepage=""
 		download=""
@@ -55,6 +55,7 @@ And override some inner methods:
 		def stuff(self):
 			print "Program installing now"
 			...
+
 You should look at Library/\_\_recipe__.py for all methods. 
 It's not very documented for now, but easy enought for average programmer to understand.
 
@@ -79,11 +80,11 @@ TO-DO
 Urgent
 ----
 + (commands) : update
-+ \__recipe__ : upgrade install
++ \_\_recipe__ : install (auto discover method)
 
 Important
 ----
-+ (archive) : expand correctly when only one item is present
++ (archive) : expand correctly when only one item is present, check bad files
 + (errors) : REAL error handling, not vodoo random catching
 + Concurent versions (install/update handling)
 + Symlink for windows
