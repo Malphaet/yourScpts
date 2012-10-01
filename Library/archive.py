@@ -25,10 +25,29 @@
 
 # Import
 
+import os
 import tarfile,zipfile,mimetypes
 
 # Functions
 
+## Path treatement
+def	prefix(files):
+	pref=files[0]
+	size=len(pref)
+	for f in files:
+		if pref!=f[size:]:
+			return '' 
+	return pref
+	
+def clear_forbidden(files):
+	ret=[]
+	for f in files:
+		n=os.path.normpath(f)
+		if (n[0]!='/' and n[:2]!='..'):
+			ret.append(f)
+	return f
+	
+## Main function
 def extract(path,dest):
 	mime=mimetypes.guess_type(path,False)[0]
 	if mime!=None and "text/" in mime :
@@ -36,12 +55,21 @@ def extract(path,dest):
 		d.write(f.read())
 		d.close(),f.close()
 		return True
-	if tarfile.is_tarfile(path): tmpf=tarfile.open(path,'r')
+	
+	if tarfile.is_tarfile(path):
+		tmpf=tarfile.open(path,'r')
+		files=tmpf.getnames()
+		extract=tmpf.extractall
 	else:
-		if zipfile.is_zipfile(path): tmpf=zipfile.ZipFile(path)
+		if zipfile.is_zipfile(path):
+			tmpf=zipfile.ZipFile(path)
+			files=tmpf.namelist()
+			extract=tmpf.extractall
 		else: 
-			print "The given file is impossible to extract."
-			return False
-	tmpf.extractall(dest)
+			raise IOError("The given file is impossible to extract.")
+	
+	p_size=len(prefix(files))
+	print p_size,prefix(files)
+	extract(clear_forbidden(files),dest)
 	tmpf.close()
 	return True

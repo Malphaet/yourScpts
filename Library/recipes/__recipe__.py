@@ -25,8 +25,9 @@
 
 # Include
 
-import os
+import os,sys
 from .. import *
+from ..extend import ENV
 
 # Classes
 
@@ -39,11 +40,11 @@ class recipe():
 	version="0.1a"
 	
 	def __init__(self,deploy):
-		self.deploypath,self.name=os.path.split(deploy)
+		self.deploypath,self.name=os.path.split(deploy)  # Path to the deploy location (unused), name of recipe
 		
-		self.deployname=deploy
-		self.extractname=self.deployname+'_'+self.version
-		self.tmppath=os.tmpnam()
+		self.deployname=deploy # Where to deploy the archive (extention free)
+		self.extractname=os.path.join(ENV.MODULE_PATH,self.name+'_'+self.version)  # Where to extact the file (ENV.DEBUG dependant)
+		self.tmppath=os.tmpnam() # Where to download the file, yes it's a security hole
 		
 	def fetch(self):
 		download.fetch(self.download,self.tmppath)
@@ -51,32 +52,42 @@ class recipe():
 	def check(self,do_not_stop_on_error=True):
 		"The do_not_stop_on_error will print the checksum and continue"
 		if not checksum.integrity(self.tmppath,self.checksum,self.checktype,do_not_stop_on_error):
-			raise ValueError("Hash of fetched file and given one don't match.")
+			self.clean()
+			print ("Hash of fetched file and given one don't match.")
+			sys.exit()
 			
-		
 	def extract(self):
 		try:
 			os.mkdir(self.extractname)
-		except:
-			raise IOError("The program already exists (you should have tested that moron).")
-		if not archive.extract(self.tmppath,self.extractname):
+			archive.extract(self.tmppath,self.extractname)
+		except OSError:
+			print ("The program already exists (you should have tested that moron).")
+			sys.exit()
+		except IOError:
 			os.rmdir(self.extractname)
-		
+			self.clean()
+			print ("The extraction failed.")
+			sys.exit()
+		except:
+			print "Unknown error"
+			print sys.exc_info()[:2]
 	def clean(self):
 		os.remove(self.tmppath)
 		
 	def link(self):
-		syslink.link(self.extractname,self.deployname) # Totally unsure about that
+		syslink.link(self.name,self.extractname,self.deployname) # Totally unsure about that
 	
 	def test(self):
 		"Pre install/fetch test. Meant for debug purposes"
 		for attr in self.__dict__:
-			print attr
+			print attr,':',self.__dict__[attr]
 
 	def install(self):
 		self.fetch()
 		self.check() # You should ALWAYS check, yet you're the boss
-		self.extract()
-		self.test() # DEBUG
-		self.clean()
 #		self.link()
+		self.extract()
+#		self.test() # DEBUG
+		self.clean()
+		self.link()
+

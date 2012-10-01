@@ -7,5 +7,6 @@ class metagoofil(recipe):
 	download="http://metagoofil.googlecode.com/files/metagoofil-2.1_BH2011_Arsenal.tar.gz"
 	version='2.1'
 
+_install=metagoofil
 def install(path):
-	metagoofil(path).install()
+	_install(path).install()

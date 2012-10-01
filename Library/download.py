@@ -38,11 +38,12 @@ def fetch(url,tmpfile):
 	c.setopt(pycurl.MAXREDIRS, 5)
 	c.setopt(pycurl.NOPROGRESS, 0)
 	c.setopt(pycurl.PROGRESSFUNCTION, progress)
-	print ""
+
 	c.perform()
 	b.close()
 	CODE,PAGE=c.getinfo(pycurl.HTTP_CODE),c.getinfo(pycurl.EFFECTIVE_URL)
 	print ""
+	
 	if CODE>299:
 		os.remove(tmpfile)
 		raise IOError("URL %s unreachable"%self.download)

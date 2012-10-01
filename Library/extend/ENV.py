@@ -29,18 +29,22 @@ import sys,os
 # ENV Variables
 DEBUG=True
 SELF_PATH=os.path.join(os.getcwd(),os.path.split(sys.argv[0])[0])
-if DEBUG: MODULE_PATH=os.path.join(SELF_PATH,"opt","yourScpts","scpts")
-else: MODULE_PATH=os.path.join("opt","yourScpts","scpts")
+if DEBUG: ROOT_PATH=os.path.join(SELF_PATH,"opt","yourScpts")
+else: ROOT_PATH=os.path.join("opt","yourScpts")
 
+MODULE_PATH=os.path.join(ROOT_PATH,"scpts")
+INFO_PATH=os.path.join(ROOT_PATH,'infos')
+
+_PATHS=[ROOT_PATH,MODULE_PATH,INFO_PATH]
 # Test ENV
-if not os.access(MODULE_PATH, os.W_OK):
-	try:
-		os.makedirs(MODULE_PATH)
-		print "%s was created."
-	except:
-		raise IOError("%s is not writable, abort !"%MODULE_PATH)
+for path in _PATHS:
+	if not os.access(path, os.W_OK):
+		try:
+			os.makedirs(path)
+			print "%s was created."%path
+		except:
+			raise IOError("%s is not writable, abort !"%MODULE_PATH)
 
-
-if DEBUG:
-	print "yourScpts directory:",SELF_PATH
-	print "Scripts directory:", MODULE_PATH
+#if DEBUG:
+#	print "yourScpts directory:",SELF_PATH
+#	print "root path:",ROOT_PATH

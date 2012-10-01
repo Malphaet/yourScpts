@@ -40,20 +40,42 @@ warnings.simplefilter("ignore")
 # ys -v
 # ys version goolib
 
-parser=argparse.ArgumentParser(description="Install a script according to a given recipe.")
-parser.add_argument('mode', metavar='mode', type=str,choices=['install','update','locate','version','remove'], help='action to perform') # 
-parser.add_argument('recipe', metavar='recipe', type=str, help='the program to fetch')
-parser.add_argument('path', nargs='?', help='custom path to install the program',default=ENV.MODULE_PATH)
+parser=argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,description=("""\
+Scripts managing program.
+-------------------------
+    Install, update, manage your scripts.
+    This program is made to handle custom scripts,
+    and is heavily git based to keep track of 
+    versions and recipes."""))
+
+subparsers = parser.add_subparsers(title='action to perform',dest='command', help='for more help, try [command] -h')
+
+parser_install=subparsers.add_parser('install',help='install the given recipe')
+parser_install.add_argument('recipe', metavar='recipe', type=str, help='the program to fetch')
+parser_install.add_argument('path', nargs='?', help='custom path to install the program',default=ENV.MODULE_PATH)
+
+parser_locate=subparsers.add_parser('locate',help='locate the given recipe')
+parser_locate.add_argument('recipe', metavar='recipe', type=str, help='the program to locate')
+
+parser_update=subparsers.add_parser('update',help='update the given recipe')
+parser_update.add_argument('recipe', metavar='recipe', type=str, help='the program to update')
+parser_update.add_argument('--check','-c',action='store_true',help='only check if uptades exists')
+
+parser_version=subparsers.add_parser('version',help='give the version of the given recipe')
+parser_version.add_argument('recipe', metavar='recipe', type=str, help='the program to analyse')
+parser_version.add_argument('--all',action='store_true',help='show all versions')
+
+parser_remove=subparsers.add_parser('remove',help='remove the given recipe')
+parser_remove.add_argument('recipe', metavar='recipe', type=str, help='the program to remove')
+parser_remove.add_argument('path', nargs='?', help='custom path to remove the program',default=ENV.MODULE_PATH)
+
+parser_upgrade=subparsers.add_parser('upgrade',help='upgrade the program and/or recipes')
+parser_upgrade.add_argument('--recipes',action='store_true',help='only update the recipes')
 
 parser.add_argument('-v','--verbose', dest='debug', action='store_true', default=False, help='be verbose')
 
-
 args = parser.parse_args()
-try:
-	mod=importlib.import_module("Library.recipes."+args.recipe)
-	mod.install(os.path.join(args.path,args.recipe))
-except ImportError:
-	print "The program doesn't have an available receipe for %s."%args.recipe
-	print "Maybe you should check if the name is correct, or contribute by adding it to the database."
-except:
-	print sys.exc_info()[:2]
+
+# Main program
+
+commands.__getattribute__(args.command)(args)
