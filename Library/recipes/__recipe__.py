@@ -65,7 +65,6 @@ class recipe():
 		try:
 			archive.extract(self.tmppath,self.extractname)
 		except IOError:
-			os.rmdir(self.extractname)
 			self.clean()
 			print ("The extraction failed.")
 			sys.exit()

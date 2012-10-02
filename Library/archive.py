@@ -25,16 +25,16 @@
 
 # Import
 
-import os
+import os,sys
 import tarfile,zipfile,mimetypes
 
 # Functions
 
-## Path treatement	
-def clear_forbidden(files):
+## Path treatement
+def clear_forbidden(files,get=lambda x:x):
 	ret=[]
 	for f in files:
-		n=os.path.normpath(f)
+		n=os.path.normpath(get(f))
 		if (n[0]!='/' and n[:2]!='..'):
 			ret.append(f)
 	return ret
@@ -51,11 +51,13 @@ def extract(path,dest):
 		
 	if tarfile.is_tarfile(path):
 		tmpf=tarfile.open(path,'r')
-		files=tmpf.getnames()
+		files=tmpf.getmembers()
+		get=lambda x:x.name
 		extract=tmpf.extractall
 	else:
 		if zipfile.is_zipfile(path):
 			tmpf=zipfile.ZipFile(path)
+			get=lambda x:x
 			files=tmpf.namelist()
 			extract=tmpf.extractall
 		else: 
@@ -63,9 +65,14 @@ def extract(path,dest):
 	
 	t_dest=dest+"_temp_"
 	os.mkdir(t_dest)
-	
-	extract(t_dest,clear_forbidden(files))
-	extracted_files=os.listdir(t_dest)
+	try:
+		extract(path=t_dest,members=clear_forbidden(files,get))
+		extracted_files=os.listdir(t_dest)
+	except:
+		os.rmdir(t_dest)
+		print sys.exc_info()
+		print sys.exc_info()[2].exc_info()
+		raise IOError("Extraction Failed")
 	
 	if len(extracted_files)==1:
 		os.rename(os.path.join(t_dest,extracted_files[0]),dest)
