@@ -2,6 +2,7 @@ yourScpts
 ====
 
 The goal is quite simple, use git and recipes to manage esoteric softwares (.py .pl .rb).
+
 This project was heavily inspired by homebrew's ideas.
 
 
@@ -17,8 +18,8 @@ Use git to be always up to date and add your own recipes.
 
 + Download and extract last version.
 + Run the install script
-+ Add an alias to your .bashrc (like alias your-get='python /opt/yourScpts/yourScpts.py') so you can use your-get like apt-get
-  + Bonus, your-get update yourScpts will work :)
++ Add an alias to your .bashrc (like `alias your-get='python /opt/yourScpts/yourScpts.py'`) so you can use `your-get` like `apt-get`
+  + Bonus, `your-get update yourScpts` will work :)
 
 Configure
 ----
@@ -30,9 +31,14 @@ By default, scripts are deployed in /opt/yourScpts, please be sure the directory
 Usage
 ----
 
+    python yourScpts.py -h
     python yourScpts.py install <package>
+    python yourScpts.py locate <package>
+    python yourScpts.py update <package>
+    python yourScpts.py remove <package>
     python yourScpts.py create <package>
     python yourScpts.py edit <package>
+    python yourScpts.py upgrade
 
 HOW-TO
 ----
@@ -52,7 +58,7 @@ The mandatory basecode is:
 	
 	_install=yourRecipe
 
-And override some inner methods:
+You can override some inner methods:
 
 	class yourRecipe(recipe):
 		def install(self,path):
@@ -69,8 +75,8 @@ The most interresting one being of course `install(self,path)` witch allows actu
 You should look at Library/\_\_recipe__.py for all methods. 
 It's not very documented for now, but easy enought for average programmer to understand.
 
-> It should usualy not be considered as a very clever idea to override the basic method (except for the install method of course)
-> Most of them only perform error handling, and pretty printing
+> It should usualy not be considered as a very clever idea to override the basic method (except for the install method of course).
+> Most of them only perform error handling, and pretty printing.
 > However, YOU are the boss.
 
 #### Important
@@ -98,27 +104,33 @@ TO-DO
 
 Urgent
 ----
-+ (syslink) Symlink for windows
-+ (commands) Concurent versions (install/update handling)
+
 + (commands) add a deploy method, allow to specify multiple paths for deploying
-+ (commands) linking, relinking as a command
+
 
 Important
 ----
-+ (errors) REAL error handling, not vodoo random catching
+
++ (commands) linking, relinking as a command
 
 + (\_\_recipe__ )\_\_recipe__.check() isn't really clever, error handling would be more appropriate
-+ (commands) upgrade,edit,create
+
 
 Cosmetic
 ----
+
++ (errors) REAL error handling, not vodoo random catching
 + Debug/Verbose REAL handling
-+ update --remove
-+ more apt-get like messages
++ (commands) update --remove (--version)
++ (commands) remove --version
++ messages more apt-get-like
 + integrity check is uber-odd
++ (commands) upgrade,edit,create
++ (commands) update: prune all old symlinks (laaaaame)
 
 Fixed (In theory)
 ----
++ (syslink) Symlink for windows
 + (archive) extract should raise error
 + commands
   + locate

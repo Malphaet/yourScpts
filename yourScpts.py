@@ -51,14 +51,15 @@ Scripts managing program.
 subparsers = parser.add_subparsers(title='action to perform',dest='command', help='for more help, try [command] -h')
 
 parser_install=subparsers.add_parser('install',help='install the given recipe')
-parser_install.add_argument('recipe', metavar='recipe', type=str, help='the program to fetch')
+parser_install.add_argument('recipe', metavar='recipe',nargs='*', type=str, help='the program to fetch')
 parser_install.add_argument('path', nargs='?', help='custom path to install the program',default=ENV.MODULE_PATH)
+parser_install.add_argument('--update','-u',action='store_true',help='update is possible')
 
 parser_locate=subparsers.add_parser('locate',help='locate the given recipe')
-parser_locate.add_argument('recipe', metavar='recipe', type=str, help='the program to locate')
+parser_locate.add_argument('recipe', metavar='recipe',nargs='*', type=str, help='the program to locate')
 
 parser_update=subparsers.add_parser('update',help='update the given recipe')
-parser_update.add_argument('recipe', metavar='recipe', type=str, help='the program to update')
+parser_update.add_argument('recipe', metavar='recipe',nargs='*', type=str, help='the program to update')
 parser_update.add_argument('--check','-c',action='store_true',help='only check if uptades exists')
 #parser_update.add_argument('--remove','--delete','-d',action='store_true',help='remove prior versions')
 
@@ -73,6 +74,7 @@ parser_remove.add_argument('path', nargs='?', help='custom path to remove the pr
 parser_upgrade=subparsers.add_parser('upgrade',help='upgrade the program and/or recipes')
 parser_upgrade.add_argument('--recipes',action='store_true',help='only update the recipes')
 #parser_upgrade.add_argument('--git',action='store_true',help='use git to update')
+
 
 parser.add_argument('-v','--verbose', dest='debug', action='store_true', default=False, help='be verbose')
 

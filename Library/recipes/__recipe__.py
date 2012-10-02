@@ -83,9 +83,8 @@ class recipe():
 	def install(self):
 		self.fetch()
 		self.check() # You should ALWAYS check, yet you're the boss
-#		self.link()
 		self.extract()
-#		self.test() # DEBUG
 		self.clean()
 		self.link()
+		#self.test() # DEBUG
 

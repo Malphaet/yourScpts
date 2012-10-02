@@ -7,7 +7,7 @@ class windcalc(recipe):
 	homepage="https://github.com/Malphaet/windCalc"
 	download="file:///home/malphaet/Downloads/Malphaet-windCalc-0492603.zip"
 	#"https://github.com/Malphaet/windCalc/zipball/master" # Obviously dumb :> no auto redirect with checksum
-	version='0.2'
+	version='0.38'
 
 _install=windcalc			
 def install(path):

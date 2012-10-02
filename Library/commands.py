@@ -44,22 +44,22 @@ def infos(program):
 	except:
 		raise ImportError("Last install didn't performed as due")
 	existing=f.read().split(os.linesep)
-	versions,programs,symlinks=[],set(),[] # Don't add duplicates because of symlinks
+	versions,programs,symlinks=[],set(),set() # Don't add duplicates because of symlinks
 	for line in existing:
 		try:
 			if line!='': # If someone got the strange idea to edit by hand
 				sym,prog=line.split(',')
 				versions.append(prog.split('_')[-1])
-				symlinks.append(sym)
+				symlinks.add(sym)
 				programs.add(prog) # Don't add duplicates because of symlinks
 		except:
 			print "The info file",os.path.join(ENV.INFO_PATH,program),"is damaged, reading isn't possible"
-	programs=list(programs)
+	programs,symlinks=list(programs),list(symlinks)
 	return {'installed':programs,'versions':versions,'links':symlinks,'all':programs+symlinks}
 	
 def newest(program,version):
 	return max(infos(program)['versions']) >= version
-
+	
 ## Tools
 
 def importProgram(recipe):
@@ -73,36 +73,61 @@ def importProgram(recipe):
 
 ## Commands	
 def install(args): # Will one day work with gitpython for version management
-	program=args.recipe
-	mod=importProgram(program)
-	if installed(program): 
-		if newest(program,mod._install.version): state="and is up to date"
-		else: state="but is not up to date"
-		print "The program is already installed",state
-		return False
-	print "Recipe %s selected, installing"%program # VERBOSE ?
-	mod.install(os.path.join(args.path,args.recipe))
+	for program in args.recipe:
+		mod=importProgram(program)
+		if installed(program): 
+			if newest(program,mod._install.version):
+				print "The program is already installed, and is up to date"
+				return False
+			else:
+				print "The program is already installed, but is not up to date"
+			if args.update:
+				args.check=False
+				return update(args)
+			else:
+				return False
+		print "Recipe %s selected, installing"%program # VERBOSE ?
+		mod.install(os.path.join(args.path,program))
 	
 def update(args):
-	program=args.recipe
-	if not installed(program): AvailableError(program)
-	prog=importProgram(program)
-	if args.check:
+	for program in args.recipe:
+		if not installed(program): AvailableError(program)
+		prog=importProgram(program)
 		if newest(program,prog._install.version):
 			print "Your program is already up to date"
+			return
 		else:
-			print "Your program is not up to date"
-		return
-	# Real update
+			if args.check:
+				print "Your program is not up to date"
+				return False
+		print "Recipe %s selected, updating"%program
+		prog.install(os.path.join(args.path,program))
 	
 def locate(args):
-	program=args.recipe
-	if not installed(program): AvailableError(program)
-	print "The following paths the (known) deployments of the recipe"
-	for place in infos(program)['all']:
-		if os.path.exists(place): broken='[Valid]'
-		else: broken='[Broken]'
-		print place,broken
+	if args.recipe==[]:
+		programs=os.listdir(ENV.INFO_PATH)
+		if programs: 
+			print "The following programs are installed"
+		else:
+			print "There are no installed programs"
+		for prog in programs:
+			print prog
+	for program in args.recipe:
+		if not installed(program): 
+			try:
+				AvailableError(program)
+			except:
+				continue
+		print "The following paths the (known) deployments of %s"%program
+		r_infos=infos(program)
+		for place in r_infos['installed']:
+			if os.path.exists(place): broken='[Valid]'
+			else: broken='[Broken]'
+			print place,broken
+		for place in r_infos['links']:
+			if os.path.exists(place): broken='(linkto: '+os.path.realpath(place).split('_')[-1]+') [Valid]'
+			else: broken='[Broken]'
+			print place,broken
 
 def version(args):
 	program=args.recipe

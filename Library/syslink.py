@@ -30,10 +30,16 @@ import extend.ENV as ENV
 # Functions
 
 def symlink(a,b):
-	os.symlink(a,b)
+	if sys.platform=='win32':
+		import ctypes
+		kdll = ctypes.windll.LoadLibrary("kernel32.dll")
+		kdll.CreateSymbolicLinkA(a, b, 0)
+	else:
+		os.symlink(a,b)	
 
 def link(program,extract_path,deploy_path):
 	f=open(os.path.join(ENV.INFO_PATH,program),'a')
 	f.write(deploy_path+','+extract_path+os.linesep)
 	f.close()
+	if os.path.exists(deploy_path): os.remove(deploy_path) # Update the symlink
 	symlink(extract_path,deploy_path)
