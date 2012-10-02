@@ -27,11 +27,11 @@
 import hashlib
 
 # Functions
-def integrity(file_to_check,checksum_value,checksum_type,do_not_stop):
+def integrity(file_to_check,checksum_value,checksum_type,_stop_on_checksum_error):
 	if checksum_type not in hashlib.algorithms: raise NotImplementedError("This is not the hash you are looking for.")
 	checksum_type=hashlib.__dict__[checksum_type]
 	filechecksum=checksum(file_to_check,checksum_type)
-	if do_not_stop: return checksum_value==filechecksum
+	if _stop_on_checksum_error: return checksum_value==filechecksum
 	else: 
 		print filechecksum
 		return True

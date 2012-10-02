@@ -9,6 +9,4 @@ class windcalc(recipe):
 	#"https://github.com/Malphaet/windCalc/zipball/master" # Obviously dumb :> no auto redirect with checksum
 	version='0.38'
 
-_install=windcalc			
-def install(path):
-	windcalc(path).install()
+_install=windcalc

@@ -38,6 +38,7 @@ class recipe():
 	homepage=""
 	download=""
 	version="0.1a"
+	_stop_on_checksum_error=True
 	
 	def __init__(self,deploy):
 		self.deploypath,self.name=os.path.split(deploy)  # Path to the deploy location (unused), name of recipe
@@ -53,9 +54,9 @@ class recipe():
 			print sys.exc_info()[1]
 			sys.exit()
 	
-	def check(self,do_not_stop_on_error=True):
+	def check(self):
 		"The do_not_stop_on_error will print the checksum and continue"
-		if not checksum.integrity(self.tmppath,self.checksum,self.checktype,do_not_stop_on_error):
+		if not checksum.integrity(self.tmppath,self.checksum,self.checktype,self._stop_on_checksum_error):
 			self.clean()
 			print ("Hash of fetched file and given one don't match.")
 			sys.exit()

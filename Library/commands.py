@@ -87,7 +87,7 @@ def install(args): # Will one day work with gitpython for version management
 			else:
 				return False
 		print "Recipe %s selected, installing"%program # VERBOSE ?
-		mod.install(os.path.join(args.path,program))
+		mod._install(os.path.join(args.path,program)).install()
 	
 def update(args):
 	for program in args.recipe:
@@ -101,7 +101,7 @@ def update(args):
 				print "Your program is not up to date"
 				return False
 		print "Recipe %s selected, updating"%program
-		prog.install(os.path.join(args.path,program))
+		prog._install(os.path.join(args.path,program)).install()
 	
 def locate(args):
 	if args.recipe==[]:
