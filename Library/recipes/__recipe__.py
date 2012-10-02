@@ -41,13 +41,17 @@ class recipe():
 	
 	def __init__(self,deploy):
 		self.deploypath,self.name=os.path.split(deploy)  # Path to the deploy location (unused), name of recipe
-		
 		self.deployname=deploy # Where to deploy the archive (extention free)
 		self.extractname=os.path.join(ENV.MODULE_PATH,self.name+'_'+self.version)  # Where to extact the file (ENV.DEBUG dependant)
 		self.tmppath=os.tmpnam() # Where to download the file, yes it's a security hole
 		
 	def fetch(self):
-		download.fetch(self.download,self.tmppath)
+		try:
+			download.fetch(self.download,self.tmppath)
+		except:
+			print "\nDownload failed !"
+			print sys.exc_info()[1]
+			sys.exit()
 	
 	def check(self,do_not_stop_on_error=True):
 		"The do_not_stop_on_error will print the checksum and continue"
@@ -58,19 +62,13 @@ class recipe():
 			
 	def extract(self):
 		try:
-			os.mkdir(self.extractname)
 			archive.extract(self.tmppath,self.extractname)
-		except OSError:
-			print ("The program already exists (you should have tested that moron).")
-			sys.exit()
 		except IOError:
 			os.rmdir(self.extractname)
 			self.clean()
 			print ("The extraction failed.")
 			sys.exit()
-		except:
-			print "Unknown error"
-			print sys.exc_info()[:2]
+			
 	def clean(self):
 		os.remove(self.tmppath)
 		

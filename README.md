@@ -7,10 +7,25 @@ This project was heavily inspired by homebrew's ideas.
 
 Install
 ----
-Download and extract last version.
+### The coder way
 
-If you would rather use the last (unstable version)
-     git clone git@github.com:Malphaet/YAPM.git
+	git clone git@github.com:Malphaet/yourScpts.git
+
+Use git to be always up to date and add your own recipes.
+
+### The user way
+
++ Download and extract last version.
++ Run the install script
++ Add an alias to your .bashrc (like alias your-get='python /opt/yourScpts/yourScpts.py') so you can use your-get like apt-get
+  + Bonus, your-get update yourScpts will work :)
+
+Configure
+----
+
+A lot of environement variables are available in Library/extend/ENV.py you should consider customizing them.
+By default, scripts are deployed in /opt/yourScpts, please be sure the directory is writable (`make install` will do the trick)
+
 
 Usage
 ----
@@ -36,11 +51,6 @@ The mandatory basecode is:
 		version=""
 	
 	_install=yourRecipe
-	
-You can provide an install method:
-
-	def install(path):
-		_install(path).install()
 
 And override some inner methods:
 
@@ -52,12 +62,21 @@ And override some inner methods:
 			...
 			self.extract()
 			self.link()
-		def stuff(self):
-			print "Program installing now"
-			...
+			self.clean()
+
+The most interresting one being of course `install(self,path)` witch allows actually to do all the install stuff.
 
 You should look at Library/\_\_recipe__.py for all methods. 
 It's not very documented for now, but easy enought for average programmer to understand.
+
+> It should usualy not be considered as a very clever idea to override the basic method (except for the install method of course)
+> Most of them only perform error handling, and pretty printing
+> However, YOU are the boss.
+
+#### Important
+
+Recipes ARE python classes, witch means you can add conditions, variables, import other recipes, depends on other recipes to be installed, perform weird install things (./configure --prefix=ENV.MODULE_PATH, make, make install).
+
 
 #### Commiting
 The commit policy is not that high, and for now, there's a 99% chance your pull request passes.
@@ -79,28 +98,29 @@ TO-DO
 
 Urgent
 ----
-+ (commands) : update
-+ \_\_recipe__ : install (auto discover method)
++ (syslink) Symlink for windows
++ (commands) Concurent versions (install/update handling)
++ (commands) add a deploy method, allow to specify multiple paths for deploying
++ (commands) linking, relinking as a command
 
 Important
 ----
-+ (archive) : expand correctly when only one item is present, check bad files
-+ (errors) : REAL error handling, not vodoo random catching
-+ Concurent versions (install/update handling)
-+ Symlink for windows
-+ add a deploy method, allow to specify multiple paths for deploying
-+ \_\_recipe__.check() isn't really clever, error handling would be more appropriate
-+ extract should raise error
-+ extract, clear_forbidden
++ (errors) REAL error handling, not vodoo random catching
+
++ (\_\_recipe__ )\_\_recipe__.check() isn't really clever, error handling would be more appropriate
++ (commands) upgrade,edit,create
 
 Cosmetic
 ----
 + Debug/Verbose REAL handling
++ update --remove
++ more apt-get like messages
++ integrity check is uber-odd
 
 Fixed (In theory)
 ----
++ (archive) extract should raise error
 + commands
   + locate
   + versions
-  + install
   + remove

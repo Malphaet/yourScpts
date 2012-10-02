@@ -80,6 +80,7 @@ def install(args): # Will one day work with gitpython for version management
 		else: state="but is not up to date"
 		print "The program is already installed",state
 		return False
+	print "Recipe %s selected, installing"%program # VERBOSE ?
 	mod.install(os.path.join(args.path,args.recipe))
 	
 def update(args):
@@ -107,8 +108,8 @@ def version(args):
 	program=args.recipe
 	if not installed(program): AvailableError(program)
 	versions=infos(program)['versions']
-	if args.all: print versions
-	else: print max(versions)
+	if args.all: print "%s comes in versions : "%program,versions
+	else: print "%s is currently in version"%program,max(versions)
 	
 def remove(args):
 	program=args.recipe
@@ -124,6 +125,7 @@ def remove(args):
 	except:
 		print "Humm. That's odd, info file cannot be removed"
 		print "Proceed yourself:",os.path.join(ENV.INFO_PATH,program)
+	print "Program %s completely removed"%program # VERBOSE ?
 	
 def upgrade(args): # Will one day work with gitpython
 	print "type commands:"

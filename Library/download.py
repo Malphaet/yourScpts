@@ -50,6 +50,6 @@ def fetch(url,tmpfile):
 	c.close()
 	return (CODE,PAGE)
 
-def progress(download_t, download_d, upload_t, upload_d): 
-     sys.stdout.write("\rDownloading %i/%i"%(download_d,download_t))
-     sys.stdout.flush()
+def progress(download_t, download_d, upload_t, upload_d):
+	sys.stdout.write("\rDownloading %i/%i"%(download_d,download_t))
+	sys.stdout.flush()

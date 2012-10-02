@@ -60,6 +60,7 @@ parser_locate.add_argument('recipe', metavar='recipe', type=str, help='the progr
 parser_update=subparsers.add_parser('update',help='update the given recipe')
 parser_update.add_argument('recipe', metavar='recipe', type=str, help='the program to update')
 parser_update.add_argument('--check','-c',action='store_true',help='only check if uptades exists')
+#parser_update.add_argument('--remove','--delete','-d',action='store_true',help='remove prior versions')
 
 parser_version=subparsers.add_parser('version',help='give the version of the given recipe')
 parser_version.add_argument('recipe', metavar='recipe', type=str, help='the program to analyse')
@@ -71,6 +72,7 @@ parser_remove.add_argument('path', nargs='?', help='custom path to remove the pr
 
 parser_upgrade=subparsers.add_parser('upgrade',help='upgrade the program and/or recipes')
 parser_upgrade.add_argument('--recipes',action='store_true',help='only update the recipes')
+#parser_upgrade.add_argument('--git',action='store_true',help='use git to update')
 
 parser.add_argument('-v','--verbose', dest='debug', action='store_true', default=False, help='be verbose')
 
