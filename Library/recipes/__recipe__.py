@@ -37,7 +37,11 @@ class recipe():
 	checksum=""
 	homepage=""
 	download=""
-	version="0.1a"
+	description="""
+	"""
+	tags=""
+	version="none"
+	_deploy_name=""
 	_stop_on_checksum_error=True
 	
 	def __init__(self,deploy):
@@ -63,7 +67,7 @@ class recipe():
 			
 	def extract(self):
 		try:
-			archive.extract(self.tmppath,self.extractname)
+			archive.extract(self.tmppath,self.extractname,self._deploy_name)
 		except IOError:
 			self.clean()
 			print ("The extraction failed.")
