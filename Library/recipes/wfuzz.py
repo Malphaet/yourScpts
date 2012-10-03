@@ -1,4 +1,5 @@
 from __recipe__ import recipe
+import os,stat
 
 class _install(recipe):
 	checktype="sha1"
@@ -10,4 +11,10 @@ Wfuzz is a tool designed for bruteforcing Web Applications, it can be used for f
 	"""
 	tags="pentest,injection,XSS,Sql,Fuzzing"
 	version='2.0'
-
+	_link_custom_file='wfuzz.py'
+	
+	def f_chmod(self,f,mode):
+		os.chmod(f,os.stat(f).st_mode|mode)
+	
+	def post_install(self):
+		self.f_chmod(os.path.join(self.extractname,self._link_custom_file),stat.S_IXUSR)

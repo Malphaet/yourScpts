@@ -14,4 +14,4 @@ The process is very simple, ProxyStrike runs like a proxy listening in port 8008
 	"""
 	tags="pentest,sql injection,XSS,pentest,sqlibf,false proxy,proxy,analysing"
 	version='2.2'
-
+	_link_custom_file='proxystrike'

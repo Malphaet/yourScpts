@@ -12,6 +12,7 @@ class _install(recipe):
 	"""
 	tags=""
 	_deploy_name='dnsbf.py'
+	_link_custom_file='dnsbf.py'
 	version='0.3'
 #	_stop_on_checksum_error=False # False will only show the checksum and continue, True will stop if checksums doesn't match
 

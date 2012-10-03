@@ -9,4 +9,4 @@ class _install(recipe):
 	tags=""
 	version='0.1'
 	_deploy_name='mdnsrecon.rb'
-
+	_link_custom_file='mdnsrecon.rb'

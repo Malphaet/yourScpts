@@ -1,4 +1,5 @@
 from __recipe__ import recipe
+import os,stat
 
 class _install(recipe):
 	checktype="sha256"
@@ -10,5 +11,11 @@ hostmap is a free, automatic, hostnames and virtual hosts discovery tool written
 	"""
 	tags="vulnerability assessment,pentest,host discovery"
 	version='0.2.2'
-	_stop_on_checksum_error=False # False will only show the checksum and continue, True will stop if checksums doesn't match
 
+	_link_custom_file='hostmap.rb'
+	
+	def f_chmod(self,f,mode):
+		os.chmod(f,os.stat(f).st_mode|mode)
+	
+	def post_install(self):
+		self.f_chmod(os.path.join(self.extractname,self._link_custom_file),stat.S_IXUSR)

@@ -1,4 +1,5 @@
 from __recipe__ import recipe
+import os,stat
 
 class theHarvester(recipe):
 	checktype="sha1"
@@ -16,5 +17,12 @@ It is also useful for anyone that wants to know what an attacker can see about t
 	"""
 	tags="information gatherer,harvester,pentest"
 	version='2.2'
-
+	_link_custom_file='theHarvester.py'
+	
+	def f_chmod(self,f,mode):
+		os.chmod(f,os.stat(f).st_mode|mode)
+	
+	def post_install(self):
+		self.f_chmod(os.path.join(self.extractname,'theHarvester.py'),stat.S_IXUSR)
+		
 _install=theHarvester

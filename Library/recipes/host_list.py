@@ -9,4 +9,4 @@ class _install(recipe):
 	tags="utils,dictionnary,host"
 	version='0.1'
 	_deploy_name='host.txt'
-
+	_link_custom_file='host.txt'

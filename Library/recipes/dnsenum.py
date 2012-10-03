@@ -10,5 +10,6 @@ class dnsenum(recipe):
 	"""
 	tags="information gathering,dns"
 	version='2.2'
+	_link_custom_file='dnsenum.pl'
 
 _install=dnsenum

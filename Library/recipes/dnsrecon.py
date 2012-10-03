@@ -1,4 +1,5 @@
 from __recipe__ import recipe
+import os,stat
 
 class _install(recipe):
 	checktype="sha256"
@@ -8,4 +9,10 @@ class _install(recipe):
 	description="DNSrecon is a simple tool writen for target enumeration during authorized penetration test engaments. This tool provides diferent methods for enumerating targets thru DNS service."
 	tags="pentest,DNS"
 	version='0.7.8'
-
+	_link_custom_file='dnsrecon.py'
+	
+	def f_chmod(self,f,mode):
+		os.chmod(f,os.stat(f).st_mode|mode)
+	
+	def post_install(self):
+		self.f_chmod(os.path.join(self.extractname,self._link_custom_file),stat.S_IXUSR)

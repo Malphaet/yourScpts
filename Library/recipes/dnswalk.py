@@ -11,4 +11,4 @@ dnswalk is a DNS debugger. It performs zone transfers of specifieddomains, and c
 	tags="DNS debugger,DNS"
 	version='2.0.2'
 
-
+	_link_custom_file='dnswalk'

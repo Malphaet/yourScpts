@@ -43,6 +43,7 @@ class recipe():
 	version="none"
 	_deploy_name=""
 	_stop_on_checksum_error=True
+	_link_custom_file=''
 	
 	def __init__(self,deploy):
 		self.deploypath,self.name=os.path.split(deploy)  # Path to the deploy location (unused), name of recipe
@@ -77,12 +78,7 @@ class recipe():
 		os.remove(self.tmppath)
 		
 	def link(self):
-		syslink.link(self.name,self.extractname,self.deployname) # Totally unsure about that
-	
-	def test(self):
-		"Pre install/fetch test. Meant for debug purposes"
-		for attr in self.__dict__:
-			print attr,':',self.__dict__[attr]
+		syslink.link(self.name,self.extractname,self.deployname,self._link_custom_file) # Totally unsure about that
 
 	def install(self):
 		self.fetch()
@@ -90,5 +86,7 @@ class recipe():
 		self.extract()
 		self.clean()
 		self.link()
-		#self.test() # DEBUG
-
+		self.post_install()
+		
+	def post_install(self): # Meant to be overriden
+		pass

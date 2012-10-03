@@ -1,4 +1,5 @@
 from __recipe__ import recipe
+import os,stat
 
 class metagoofil(recipe):
 	checktype="sha1"
@@ -10,5 +11,13 @@ class metagoofil(recipe):
 	"""
 	tags="information gathering,harvesting"
 	version='2.1'
+	_link_custom_file='metagoofil.py'
+	
+	def f_chmod(self,f,mode):
+		os.chmod(f,os.stat(f).st_mode|mode)
+	
+	def post_install(self):
+		self.f_chmod(os.path.join(self.extractname,self._link_custom_file),stat.S_IXUSR)
+
 
 _install=metagoofil

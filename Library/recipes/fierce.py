@@ -11,5 +11,5 @@ Fierce domain scan was born out of personal frustration after performing a web a
 	tags="DNS"
 	version='0.9.9'
 	_deploy_name='fierce.pl'
-	_stop_on_checksum_error=False # False will only show the checksum and continue, True will stop if checksums doesn't match
+	_link_custom_file='fierce.pl'
 
