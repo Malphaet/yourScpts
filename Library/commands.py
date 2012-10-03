@@ -141,10 +141,10 @@ def remove(args):
 	if not installed(program): AvailableError(program)
 	for place in infos(program)['all']:
 		try:
-			if os.path.isdir(place):shutil.rmtree(place)
+			if os.path.isdir(place): shutil.rmtree(place)
 			else: os.remove(place)
 		except OSError:
-			print place, "doesn't exists"
+			if args.verbose: print place, "doesn't exists"
 	try:
 		os.remove(os.path.join(ENV.INFO_PATH,program))
 	except:

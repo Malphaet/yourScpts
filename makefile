@@ -1,6 +1,6 @@
 LIBRARY=Library
 EXTEND=$(LIBRARY)/extend
-RECEIPES=$(LIBRARY)/receipes
+RECEIPES=$(LIBRARY)/recipes
 PATHS=$(LIBRARY) $(EXTEND) $(RECEIPES)
 
 CLEAN_PATHS=$(PATHS:%=clean-%)

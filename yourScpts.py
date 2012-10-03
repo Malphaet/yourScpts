@@ -1,3 +1,4 @@
+#!/usr/bin/python2
 # -*- coding:utf8 -*-
 
 ###########################################
@@ -76,7 +77,7 @@ parser_upgrade.add_argument('--recipes',action='store_true',help='only update th
 #parser_upgrade.add_argument('--git',action='store_true',help='use git to update')
 
 
-parser.add_argument('-v','--verbose', dest='debug', action='store_true', default=False, help='be verbose')
+parser.add_argument('-v','--verbose', action='store_true', help='be verbose')
 
 args = parser.parse_args()
 

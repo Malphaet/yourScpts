@@ -17,7 +17,7 @@ Use git to be always up to date and add your own recipes.
 ### The user way
 
 + Download and extract last version.
-+ Run the install script
++ Run the install script (soon)
 + Add an alias to your .bashrc (like `alias your-get='python /opt/yourScpts/yourScpts.py'`) so you can use `your-get` like `apt-get`
   + Bonus, `your-get update yourScpts` will work :)
 
@@ -62,6 +62,8 @@ Interesting attributes are the following:
 + description : Unused for now, might be in short future
 + tags : Unused for now, might be in short future
 + \_deploy_name : if you are only deploying a file, give a custom name to it
++ \_link\_custom_file : Link a custom file not the packet itself
++ \_stop\_on\_checksum_error : Only show the checksum, do not check it (Useful for configuring the recipe)
 
 You can override some inner methods:
 
@@ -116,8 +118,9 @@ Urgent
 Important
 ----
 
++ install script
 + (commands) linking, relinking as a command
-
++ (commands) remove more efficient, error messages better handled
 + (\_\_recipe__ )\_\_recipe__.check() isn't really clever, error handling would be more appropriate
 
 
@@ -134,6 +137,7 @@ Cosmetic
 + (commands) update: prune all old symlinks (laaaaame)
 + show description if available
 + show by tags
++ reinstall command
 
 Fixed (In theory)
 ----

@@ -25,8 +25,9 @@
 
 # Import
 
-import os,sys
+import os,sys#,shutil
 import tarfile,zipfile
+import stat
 
 # Functions
 
@@ -56,11 +57,18 @@ def extract(path,dest,name=''):
 			if name!='':
 				os.mkdir(dest)
 				dest=os.path.join(dest,name)
-			f,d=open(path,'r'),open(dest,'w')
-			d.write(f.read())
-			d.close(),f.close()
-#			os.remove(f)
-			return True
+			try:
+				f,d=open(path,'r'),open(dest,'w')
+				d.write(f.read())
+				d.close(),f.close()
+				os.chmod(dest,os.stat(dest).st_mode | stat.S_IXUSR)
+#				shutil.copy(path,dest)
+#				os.remove(f)
+				return True
+			except:
+				os.rmdir(dest)
+				print sys.exc_info()
+				raise IOError("Failed to copy file")
 	
 	t_dest=dest+"_temp_"
 	os.mkdir(t_dest)
@@ -70,7 +78,6 @@ def extract(path,dest,name=''):
 	except:
 		os.rmdir(t_dest)
 		print sys.exc_info()
-		print sys.exc_info()[2].exc_info()
 		raise IOError("Extraction Failed")
 	
 	if len(extracted_files)==1:
