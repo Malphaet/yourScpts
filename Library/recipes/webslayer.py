@@ -10,4 +10,4 @@ WebSlayer is a tool designed for brute forcing Web Applications, it can be used 
 """
 	tags="bruteforce,pentest,harvester,fuzzing"
 	version='1.0a'
-	_link_custom_file='WebSlayer.py'
+#	_link_custom_file='WebSlayer.py'
