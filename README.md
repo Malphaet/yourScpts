@@ -58,6 +58,11 @@ The mandatory basecode is:
 	
 	_install=yourRecipe
 
+Interesting attributes are the following:
++ description : Unused for now, might be in short future
++ tags : Unused for now, might be in short future
++ \_deploy_name : if you are only deploying a file, give a custom name to it
+
 You can override some inner methods:
 
 	class yourRecipe(recipe):
@@ -127,6 +132,8 @@ Cosmetic
 + integrity check is uber-odd
 + (commands) upgrade,edit,create
 + (commands) update: prune all old symlinks (laaaaame)
++ show description if available
++ show by tags
 
 Fixed (In theory)
 ----

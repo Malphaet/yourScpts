@@ -26,7 +26,7 @@
 # Import
 
 import os,sys
-import tarfile,zipfile,mimetypes
+import tarfile,zipfile
 
 # Functions
 
@@ -40,15 +40,7 @@ def clear_forbidden(files,get=lambda x:x):
 	return ret
 	
 ## Main function
-def extract(path,dest):
-	mime=mimetypes.guess_type(path,False)[0]
-
-	if mime!=None and "text/" in mime :
-		f,d=open(path),open(dest)
-		d.write(f.read())
-		d.close(),f.close()
-		return True
-		
+def extract(path,dest,name=''):	
 	if tarfile.is_tarfile(path):
 		tmpf=tarfile.open(path,'r')
 		files=tmpf.getmembers()
@@ -60,8 +52,15 @@ def extract(path,dest):
 			get=lambda x:x
 			files=tmpf.namelist()
 			extract=tmpf.extractall
-		else: 
-			raise IOError("The given file is impossible to extract.")
+		else:
+			if name!='':
+				os.mkdir(dest)
+				dest=os.path.join(dest,name)
+			f,d=open(path,'r'),open(dest,'w')
+			d.write(f.read())
+			d.close(),f.close()
+#			os.remove(f)
+			return True
 	
 	t_dest=dest+"_temp_"
 	os.mkdir(t_dest)
