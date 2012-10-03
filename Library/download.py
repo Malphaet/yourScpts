@@ -51,7 +51,7 @@ def fetch(url,tmpfile):
 	return (CODE,PAGE)
 
 def progress(download_t, download_d, upload_t, upload_d):
-	power,symbol=greatest(download_t)
+	power,symbol=greatest(max(download_t,download_d))
 	download_t,download_d=(1.*download_t)/(1024**power),download_d*1./(1024**power)
 	sys.stdout.write("\rDownloading %.2f/%.2f %so     "%(download_d,download_t,symbol))
 	sys.stdout.flush()

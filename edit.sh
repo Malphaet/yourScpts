@@ -12,7 +12,7 @@ then
 	fi
 	if [ "$1" = "scpt" ]
 	then
-		TO_EDIT="$TO_EDIT Library/recipes/*.py"
+		TO_EDIT="Library/recipes/*.py"
 	fi
 fi
 #if [$1=='']
